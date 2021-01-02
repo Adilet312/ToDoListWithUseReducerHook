@@ -1,0 +1,62 @@
+section{
+  margin: 0 auto;
+  width: 100%;
+  display:flex;
+  flex-direction: column;
+  width:500px;
+}
+
+section ul{
+  list-style: none;
+  width:100%;
+  border: 1px solid grey;
+  padding-right: 20px;
+}
+section ul li{
+  width: 100%;
+  box-shadow: 0 0 8px rgba(0,0,0,.1);
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  background: lightblue;
+  }
+section ul .done{
+  background: rgba(255, 0, 0, 0.5);
+}
+section ul li:hover{
+  background: rgba(0, 0, 0, 0.1);
+}
+section ul li .icons{
+width:100px;
+display: flex;
+flex-direction: row;
+justify-content: space-around;
+}
+section ul li h3{
+  margin-left: 10px;
+}
+section div{
+  width:100%;
+  text-align: center;
+}
+section div input[type=text]{
+  height:20px;
+}
+input[type=submit]{
+  margin:0px;
+  padding: 0px;
+    height:25px;
+}
+.update-task{
+  margin: 0 auto;
+  width: 500px;
+  display:flex;
+  flex-direction: column;
+}
+.update-task input[type=text],.update-task input[type=submit]{
+  height:30px;
+  margin-top:10px;
+}
