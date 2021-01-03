@@ -10,22 +10,33 @@ const TOGGLE_TODO = 'TOGGLE_TODO';
 const taskReducer = (state, action) => {
   switch(action.type){
     case ADD_TODO : {
-      return [action.task, ...state]
+      const todos = [action.task, ...state.todos]
+      return {...state, todos}
     }
     case REMOVE_TODO : {
-      return  state.filter( task => task.id!==action.id && task)
+      const todos = state.todos.filter( task => task.id!==action.id && task)
+      return  {...state, todos}
     }
     case UPDATE_TODO : {
-      return  state.map( task => task.id===action.task.id ? Object.assign({},task,{name: action.task.name}): task)
+      //Object.assign({},task,{name: action.task.name})
+      const todos = state.todos.map( task => task.id===action.task.id ? {...task, name: action.task.name} : task)
+      return  {...state, todos}
     }
     case TOGGLE_TODO : {
-      return  state.map( task => task.id===action.task.id ? Object.assign({},task,{completed: !action.task.completed}): task)
+      //Object.assign({},task,{completed: !action.task.completed})
+      const todos = state.todos.map( task => task.id===action.task.id ? {...task, completed: !action.task.completed}: task)
+      return  {...state, todos}
     }
+    default: return state;
   }
 }
 
 const ToDoList = () =>{
-  const [ state, dispatch ] = useReducer(taskReducer, []);
+  const [ state, dispatch ] = useReducer(taskReducer, {
+    currentUser: null,
+    todos: [],
+    filter: 'SHOW_ALL'
+  });
   /*Add task to the list*/
   const addTask = (input) =>{
     let task = input.target.previousElementSibling.value;
@@ -62,7 +73,7 @@ const doneUndoneTask = (updatedTask) =>{
           <input type='text' placeholder = "Add task" />
           <input type = 'submit' value = 'Add task' onClick = {(e) => addTask(e)}/>
         </div>
-        <ListTasks tasks = {state} deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
+        <ListTasks tasks = {state.todos} deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
      </section>
   )
 }
