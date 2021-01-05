@@ -1,4 +1,6 @@
 import React, { useReducer, useEffect, Fragment } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import ListTasks from './ListTasks';
 import Modal from 'react-modal';
 import uuid from 'react-uuid'
@@ -7,6 +9,9 @@ const ADD_TODO = 'ADD_TODO';
 const REMOVE_TODO = 'REMOVE_TODO';
 const UPDATE_TODO = 'UPDATE_TODO';
 const TOGGLE_TODO = 'TOGGLE_TODO';
+const SHOW_ALL = 'SHOW_ALL';
+const SHOW_COMPLETED = 'SHOW_COMPLETED';
+const SHOW_UNCOMPLETED = 'SHOW_UNCOMPLETED';
 const taskReducer = (state, action) => {
   switch(action.type){
     case ADD_TODO : {
@@ -27,6 +32,14 @@ const taskReducer = (state, action) => {
       const todos = state.todos.map( task => task.id===action.task.id ? {...task, completed: !action.task.completed}: task)
       return  {...state, todos}
     }
+    // case SHOW_COMPLETED : {
+    //   const todos = state.todos.filter( task => task.completed && task);
+    //   return {...state, todos}
+    // }
+    // case SHOW_UNCOMPLETED : {
+    //   const todos = state.todos.filter( task => !task.completed && task);
+    //   return {...state, todos}
+    // }
     default: return state;
   }
 }
@@ -35,7 +48,7 @@ const ToDoList = () =>{
   const [ state, dispatch ] = useReducer(taskReducer, {
     currentUser: null,
     todos: [],
-    filter: 'SHOW_ALL'
+    filter: SHOW_ALL
   });
   /*Add task to the list*/
   const addTask = (input) =>{
@@ -71,6 +84,7 @@ const doneUndoneTask = (updatedTask) =>{
       <section>
         <div className = 'add-task'>
           <input type='text' placeholder = "Add task" />
+          <DatePicker/>
           <input type = 'submit' value = 'Add task' onClick = {(e) => addTask(e)}/>
         </div>
         <ListTasks tasks = {state.todos} deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
