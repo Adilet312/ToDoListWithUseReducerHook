@@ -24,10 +24,10 @@ section ul li{
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
-  background: lightblue;
+
   }
 section ul .done{
-  background: rgba(255, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.1);
 }
 section ul li:hover{
   background: rgba(0, 0, 0, 0.1);
@@ -92,4 +92,7 @@ input[type=submit]{
 }
 .color-input{
   width: 250px;
+}
+h1{
+  text-align: center;
 }

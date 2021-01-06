@@ -1,6 +1,8 @@
-import React, { useReducer, useEffect, Fragment } from 'react';
+import React, { useReducer, useEffect, useState, Fragment } from 'react';
 import ListTasks from './ListTasks';
 import Modal from 'react-modal';
+import { ChromePicker } from 'react-color';
+import { BiColorFill } from 'react-icons/bi';
 import uuid from 'react-uuid'
 import '../CSS/styles.css';
 const ADD_TODO = 'ADD_TODO';
@@ -62,13 +64,15 @@ const ToDoList = () =>{
     todos: [],
     filter: SHOW_ALL
   });
-
+  const [ isColor, setIsColor ] = useState(false);
+  const [ color, setColor ] = useState('#000080');
   /*Add task to the list*/
   const addTask = (input) =>{
     let task = input.target.previousElementSibling.value;
+    console.log(color);
     dispatch({
       type: ADD_TODO,
-      task: {id:uuid(), name:task, completed: false}
+      task: {id:uuid(), name:task, completed: false, color:color}
 
     })
   }
@@ -112,16 +116,24 @@ const getData = () =>{
 }
   return(
       <section className = 'container'>
+        <h1>To Do List with UseReducer Hook</h1>
         <div className = 'add-task'>
           <input type='text' placeholder = "Add task" />
           <input type = 'submit' value = 'Add task' onClick = {(e) => addTask(e)}/>
+          <BiColorFill style = {{fontSize:"20px"}} onClick = {()=> setIsColor(isColor => !isColor )}/>
           <select name = 'filter' className = 'filterClass'  onChange = {(e) => applyFilter(e.target.value)}>
             <option  value = {SHOW_ALL}>Show all</option>
             <option  value = {SHOW_COMPLETED}>Show completed</option>
             <option value = {SHOW_UNCOMPLETED}>Show uncompleted</option>
           </select>
         </div>
-        <ListTasks tasks = {getData()} filter = {state.filter}deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
+        <Modal  isOpen = {isColor}>
+          <div className = 'colorModal'>
+           <ChromePicker  color = {color} onChange = {(color) => setColor(color.hex)}/>
+           <input className = 'color-input' type = 'submit' value = 'Update Color'  onClick =  {()=> setIsColor(isColor => !isColor )}/>
+          </div>
+        </Modal>
+        <ListTasks tasks = {getData()}  filter = {state.filter} deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
      </section>
   )
 }
