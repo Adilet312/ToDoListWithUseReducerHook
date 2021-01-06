@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, Fragment } from 'react';
-import DatePicker from 'react-datepicker';
+import {ChromePicker} from 'react-color';
 import 'react-datepicker/dist/react-datepicker.css';
 import ListTasks from './ListTasks';
 import Modal from 'react-modal';
@@ -16,40 +16,55 @@ const taskReducer = (state, action) => {
   switch(action.type){
     case ADD_TODO : {
       const todos = [action.task, ...state.todos]
-      return {...state, todos}
+      return{...state, todos}
     }
     case REMOVE_TODO : {
       const todos = state.todos.filter( task => task.id!==action.id && task)
-      return  {...state, todos}
+      return {...state, todos}
     }
     case UPDATE_TODO : {
       //Object.assign({},task,{name: action.task.name})
       const todos = state.todos.map( task => task.id===action.task.id ? {...task, name: action.task.name} : task)
-      return  {...state, todos}
+      return {...state, todos}
     }
     case TOGGLE_TODO : {
       //Object.assign({},task,{completed: !action.task.completed})
       const todos = state.todos.map( task => task.id===action.task.id ? {...task, completed: !action.task.completed}: task)
-      return  {...state, todos}
+      return {...state, todos}
     }
-    // case SHOW_COMPLETED : {
-    //   const todos = state.todos.filter( task => task.completed && task);
-    //   return {...state, todos}
-    // }
-    // case SHOW_UNCOMPLETED : {
-    //   const todos = state.todos.filter( task => !task.completed && task);
-    //   return {...state, todos}
-    // }
+    case SHOW_COMPLETED : {
+      return {...state, filter: SHOW_COMPLETED}
+    }
+    case SHOW_UNCOMPLETED : {
+      return {...state, filter: SHOW_UNCOMPLETED }
+    }
+    case SHOW_ALL: {
+      return {...state, filter: SHOW_ALL}
+    }
     default: return state;
   }
 }
+const filterReducer = (state) =>{
+  switch (state.filter) {
+    case SHOW_COMPLETED : {
+      return  state.todos.filter( task => task.completed && task);
+    }
+    case SHOW_UNCOMPLETED : {
+      return  state.todos.filter( task => !task.completed && task);
+    }
+    case SHOW_ALL: {
+      return state.todos
+    }
 
+  }
+}
 const ToDoList = () =>{
   const [ state, dispatch ] = useReducer(taskReducer, {
     currentUser: null,
     todos: [],
     filter: SHOW_ALL
   });
+
   /*Add task to the list*/
   const addTask = (input) =>{
     let task = input.target.previousElementSibling.value;
@@ -80,14 +95,35 @@ const doneUndoneTask = (updatedTask) =>{
     task: updatedTask
   })
 }
+const applyFilter = (filter) =>{
+  dispatch({
+    type:filter
+  })
+}
+const getData = () =>{
+  if(state.filter===SHOW_COMPLETED)
+ {
+    return filterReducer(state);
+ }else if(state.filter===SHOW_UNCOMPLETED)
+ {
+   return filterReducer(state);
+ }else
+ {
+   return filterReducer(state);
+ }
+}
   return(
-      <section>
+      <section className = 'container'>
         <div className = 'add-task'>
           <input type='text' placeholder = "Add task" />
-          <DatePicker/>
           <input type = 'submit' value = 'Add task' onClick = {(e) => addTask(e)}/>
+          <select name = 'filter' className = 'filterClass'  onChange = {(e) => applyFilter(e.target.value)}>
+            <option  value = {SHOW_ALL}>Show all</option>
+            <option  value = {SHOW_COMPLETED}>Show completed</option>
+            <option value = {SHOW_UNCOMPLETED}>Show uncompleted</option>
+          </select>
         </div>
-        <ListTasks tasks = {state.todos} deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
+        <ListTasks tasks = {getData()} filter = {state.filter}deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
      </section>
   )
 }
