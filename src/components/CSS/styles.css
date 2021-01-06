@@ -80,3 +80,16 @@ input[type=submit]{
 .filterClass{
   height: 25px;
 }
+.colorModal{
+  width:300px;
+  height:350px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin:0 auto;
+}
+.color-input{
+  width: 250px;
+}

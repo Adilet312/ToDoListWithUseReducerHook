@@ -1,6 +1,4 @@
 import React, { useReducer, useEffect, Fragment } from 'react';
-import {ChromePicker} from 'react-color';
-import 'react-datepicker/dist/react-datepicker.css';
 import ListTasks from './ListTasks';
 import Modal from 'react-modal';
 import uuid from 'react-uuid'
