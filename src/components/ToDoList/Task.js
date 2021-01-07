@@ -1,15 +1,17 @@
-import React, {useState,  Fragment } from 'react';
+import React, {useState,  Fragment, useContext} from 'react';
 import Modal from 'react-modal';
 import { ImCheckboxUnchecked, ImCheckboxChecked } from 'react-icons/im';
 import {TiDeleteOutline} from 'react-icons/ti';
 import { VscEdit } from 'react-icons/vsc';
-const Task = ({task, show, deleteTask, id,updateTask, completed, doneUndoneTask, color}) =>{
+import { ToDoContext } from './ToDoList.js';
+const Task = ({task, show,  id, completed, color}) =>{
   const [ updatedTask, setUpdatedTask ] = useState({
     id: id,
     name: task,
     completed: completed
   })
   const [isModal,setIsModal] = useState(false);
+  const { deleteTask, updateTask, doneUndoneTask } = useContext(ToDoContext);
   return(
     <Fragment>
         <h3 style = {{color:`${color}`}}>{task}</h3>

@@ -1,12 +1,12 @@
-# _React Table_
+# _ToDoListWithUseReducerHook_
 
 #### _Version 1_
-#### _Date 11/19/2020_
+#### _Date 01/6/2021_
 #### By _**Adilet Momunaliev**_
 
 ## Description
 
-_Table shows list of data and sorts, searches, and selects._
+_ToDoListWithUseReducerHook creates tasks , shows tasks based on undo and done property of a tasks, edits task, deletes task, selects tasks based on done or undone._
 
 ## Getting Started
 
@@ -19,10 +19,12 @@ These instructions will get you a copy of the project up and running on your loc
 * npm install
 * npm run start
 ### Specifications
- ![min-width:620px](react-table.png);
+ ![min-width:620px](colorUpdate.png);
+ ![min-width:620px](updateItem.png);
+ ![min-width:620px](todosList.png);
 ## Technologies Used
 
-_HTML, CSS, JavaScript,Async functions,React Hooks, IDE Atom_
+_HTML, CSS, JavaScript,Async functions,React Hooks, IDE Atom, React-Modal, React-Toast. React-ColorPicker_
 
 ### License
 

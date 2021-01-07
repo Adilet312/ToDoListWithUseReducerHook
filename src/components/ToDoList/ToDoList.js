@@ -1,8 +1,12 @@
 import React, { useReducer, useEffect, useState, Fragment } from 'react';
+import Tippy from '@tippy.js/react';
+import 'tippy.js/dist/tippy.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import ListTasks from './ListTasks';
 import Modal from 'react-modal';
 import { ChromePicker } from 'react-color';
-import { BiColorFill } from 'react-icons/bi';
+import { ImTextColor } from 'react-icons/im';
 import uuid from 'react-uuid'
 import '../CSS/styles.css';
 const ADD_TODO = 'ADD_TODO';
@@ -12,6 +16,7 @@ const TOGGLE_TODO = 'TOGGLE_TODO';
 const SHOW_ALL = 'SHOW_ALL';
 const SHOW_COMPLETED = 'SHOW_COMPLETED';
 const SHOW_UNCOMPLETED = 'SHOW_UNCOMPLETED';
+export const ToDoContext = React.createContext();
 const taskReducer = (state, action) => {
   switch(action.type){
     case ADD_TODO : {
@@ -66,15 +71,17 @@ const ToDoList = () =>{
   });
   const [ isColor, setIsColor ] = useState(false);
   const [ color, setColor ] = useState('#000080');
+
   /*Add task to the list*/
   const addTask = (input) =>{
-    let task = input.target.previousElementSibling.value;
+    let task = input.target.parentNode.firstElementChild.value;
     console.log(color);
     dispatch({
       type: ADD_TODO,
       task: {id:uuid(), name:task, completed: false, color:color}
 
     })
+    input.target.parentNode.firstElementChild.value = '';
   }
   /*Remove task from the list*/
 const deleteTask = (givenId) =>{
@@ -114,18 +121,30 @@ const getData = () =>{
    return filterReducer(state);
  }
 }
+toast.configure();
+const notify = () =>{
+  toast('Loading color table!',{position: toast.POSITION.TOP_CENTER})
+}
+const colorTable = () =>{
+  // setIsColor(isColor => !isColor )
+  notify()
+  setTimeout( () => setIsColor(isColor => !isColor ),5000)
+
+}
   return(
       <section className = 'container'>
         <h1>To Do List with UseReducer Hook</h1>
         <div className = 'add-task'>
-          <input type='text' placeholder = "Add task" />
-          <input type = 'submit' value = 'Add task' onClick = {(e) => addTask(e)}/>
-          <BiColorFill style = {{fontSize:"20px"}} onClick = {()=> setIsColor(isColor => !isColor )}/>
-          <select name = 'filter' className = 'filterClass'  onChange = {(e) => applyFilter(e.target.value)}>
-            <option  value = {SHOW_ALL}>Show all</option>
-            <option  value = {SHOW_COMPLETED}>Show completed</option>
-            <option value = {SHOW_UNCOMPLETED}>Show uncompleted</option>
-          </select>
+          <Tippy content ='Enter task'><input type='text' placeholder = "Add task" /></Tippy>
+          <Tippy content ='Choose color to highlight the task'><span><ImTextColor style = {{fontSize:"20px"}} onClick = {()=> colorTable()}/></span></Tippy>
+          <Tippy content ='Add task to the list'><input type = 'submit' value = 'Add task' onClick = {(e) => (e.target.parentNode.firstElementChild.value) && addTask(e)}/></Tippy>
+          <Tippy content ='Show tasks by undo and done'>
+            <select name = 'filter' className = 'filterClass'  onChange = {(e) => applyFilter(e.target.value)}>
+              <option  value = {SHOW_ALL}>Show all</option>
+              <option  value = {SHOW_COMPLETED}>Show completed</option>
+              <option value = {SHOW_UNCOMPLETED}>Show uncompleted</option>
+            </select>
+          </Tippy>
         </div>
         <Modal  isOpen = {isColor}>
           <div className = 'colorModal'>
@@ -133,7 +152,9 @@ const getData = () =>{
            <input className = 'color-input' type = 'submit' value = 'Update Color'  onClick =  {()=> setIsColor(isColor => !isColor )}/>
           </div>
         </Modal>
-        <ListTasks tasks = {getData()}  filter = {state.filter} deleteTask = {deleteTask} updateTask = {updateTask} doneUndoneTask = {doneUndoneTask}/>
+        <ToDoContext.Provider value = {{getData, deleteTask, updateTask, doneUndoneTask }}>
+          <ListTasks   filter = {state.filter}/>
+        </ToDoContext.Provider>
      </section>
   )
 }
